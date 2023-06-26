@@ -1,0 +1,237 @@
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap");
+
+a:link {
+  text-decoration: none;
+}
+
+a:visited {
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: none;
+}
+
+a:active {
+  text-decoration: none;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  background-color: #f62d14;
+}
+
+.row {
+  padding: 10px;
+}
+
+header h1 {
+  font-family: "Press Start 2P", cursive;
+  text-align: center;
+  color: #fad61d;
+  text-shadow: 3px 3px #3466af;
+  font-size: 1.875em;
+  padding-top: 18vh;
+}
+
+.window img {
+  width: 100%;
+  border-radius: 15px;
+}
+
+button {
+  all: unset;
+  border: none;
+  border-radius: 15px;
+  background-color: #fad61d;
+  box-shadow: 3px 3px #3466af;
+  font-family: "Press Start 2P", sans-serif;
+  font-size: 1.25em;
+  padding: 10px;
+  color: #3466af;
+}
+.signin {
+  padding: 5px;
+  font-size: 1em;
+}
+.infobutton:focus {
+  filter: brightness(100%);
+}
+
+.infobutton {
+  color: #fad61d;
+  background-color: #3466af;
+  box-shadow: 3px 3px #225199;
+  font-size: 0.75em;
+  filter: brightness(80%);
+}
+
+.infobutton p {
+  color: #fad61d;
+}
+
+p .infobutton {
+  filter: brightness(100%);
+}
+
+button a {
+  text-decoration: none;
+  color: #3466af;
+  text-align: center;
+}
+
+.startgame {
+  border: 5px ridge #3466af;
+  border-radius: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #000000;
+  max-height: 48vh;
+  overflow-y: hidden;
+}
+
+.information {
+  border: 5px ridge #3466af;
+  border-radius: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  max-height: 48vh;
+  overflow-y: scroll;
+}
+
+.information button p {
+  text-align: center;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
+p {
+  font-size: 0.7rem;
+  white-space: pre-wrap;
+  font-family: "Press Start 2P", sans-serif;
+  color: #3466af;
+  line-height: 1.5em;
+}
+
+.colors {
+  width: 50%;
+  margin-top: -20px;
+  margin-bottom: -20px;
+}
+
+.colors .col-1 {
+  box-shadow: 1px 1px black;
+  border-radius: 10px;
+}
+
+.white {
+  background-color: white;
+  color: white;
+}
+
+.red {
+  background-color: #f62d14;
+  color: #f62d14;
+}
+
+.blue {
+  background-color: #3466af;
+  color: #3466af;
+}
+
+.yellow {
+  background-color: #fad61d;
+  color: #fad61d;
+}
+
+p span {
+  background-color: transparent !important;
+  text-shadow: 1px 1px 2px #000000;
+}
+
+.bg-image {
+  display: inline-block;
+}
+
+.pika {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  z-index: -1;
+}
+
+.poke {
+  position: fixed;
+  right: 0;
+  top: 0;
+  z-index: -1;
+}
+
+.pika img {
+  height: 20vh;
+}
+
+.poke img {
+  height: 20vh;
+  transform: rotate(-20deg);
+}
+
+.pokemon span {
+  margin: 0;
+  padding: 0;
+  border: none;
+}
+
+@media only screen and (min-width: 768px) {
+  /* For desktop: */
+  button {
+    font-size: 2em;
+  }
+
+  .infobutton {
+    font-size: 2em;
+  }
+
+  .two {
+    padding-left: 50px;
+    padding-right: 50px;
+  }
+
+  .pika img {
+    height: 40vh;
+  }
+
+  .poke img {
+    height: 40vh;
+  }
+
+  .information {
+    width: 60vw;
+    max-height: 47vh;
+  }
+
+  .startgame {
+    width: 60vw;
+    max-height: 47vh;
+  }
+
+  p {
+    font-size: 1.1rem;
+  }
+
+  .colors {
+    width: 35%;
+  }
+}
+
+@media only screen and (max-height: 685px) {
+  /* For small phone: */
+  .pika img {
+    height: 15vh;
+  }
+}
