@@ -11,6 +11,11 @@ function Game(props: Props) {
   const { onStartGame } = props;
   const [signedIn, setSignedIn] = useState<boolean>(false);
   const [flaskResp, setFlaskResp] = useState<any>(null);
+  const [guessFlaskResp, setGuessFlaskResp] = useState<any>(null);
+  const [guessValue, setGuessValue] = useState<any>("");
+  const [resultScreen, setResultScreen] = useState<boolean>(false);
+  const [playerNickname, setPlayerNickname] = useState<string>("");
+  const [gameOver, setGameOver] = useState<boolean>(false);
 
   useEffect(() => {
     //after signing in, start the new game using the new-game endpoint
@@ -18,9 +23,9 @@ function Game(props: Props) {
       fetch("http://127.0.0.1:5000/new-game")
         .then((response) => response.json())
         .then((data) => {
-          console.log("Data received from Flask:", data);
+          console.log("Sign in data received from Flask:", data);
           setFlaskResp(data);
-          console.log(data.pokeHTML);
+          setPlayerNickname(data.player.substring(0, 4));
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -32,29 +37,154 @@ function Game(props: Props) {
     setSignedIn(item);
   };
 
+  const handleGuessSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    fetch("http://127.0.0.1:5000/guess", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ guess: guessValue }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Guess data received from Flask:", data.guess);
+        setGuessFlaskResp(data.guess);
+        setFlaskResp(data);
+        setResultScreen(true);
+        if (data.guess.name == "game-over") {
+          setGameOver(true);
+        }
+        setGuessValue("");
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  };
+
+  const handleNewGuess = () => {
+    if (guessFlaskResp && guessFlaskResp.correct == true) {
+      fetch("http://127.0.0.1:5000/new-pokemon")
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("New Poke data received from Flask:", data);
+          setFlaskResp(data);
+          setGuessFlaskResp(null);
+          setGuessValue("");
+          setResultScreen(false);
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+        });
+    } else {
+      setGuessFlaskResp(null);
+      setResultScreen(false);
+    }
+  };
+
   return (
     <>
-      {signedIn ? (
+      {resultScreen ? (
+        guessFlaskResp && guessFlaskResp.correct == true ? (
+          <div className="startgame">
+            <p>
+              You got {guessFlaskResp.name} Correct! +{guessFlaskResp.points}
+              pts
+            </p>
+            <nav className="row">
+              <a href="#" onClick={handleNewGuess}>
+                <button className="signin pixel-corners">New Pokemon</button>
+              </a>
+            </nav>
+          </div>
+        ) : (
+          <div className="startgame">
+            {gameOver ? (
+              <>
+                <p>
+                  You got {flaskResp.pokemon} Incorrect! {guessFlaskResp.points}
+                  pts Sorry! You have no more tries left. Game Over!
+                </p>
+                <nav className="row">
+                  <a
+                    href="#"
+                    onClick={() => {
+                      onStartGame(false);
+                    }}
+                  >
+                    <button className="signin pixel-corners">START</button>
+                  </a>
+                </nav>
+              </>
+            ) : (
+              <>
+                <p>
+                  Your guess was Incorrect! {guessFlaskResp.points}
+                  pts
+                </p>
+                <nav className="row">
+                  <a href="#" onClick={handleNewGuess}>
+                    <button className="signin pixel-corners">Try Again</button>
+                  </a>
+                </nav>
+              </>
+            )}
+          </div>
+        )
+      ) : signedIn ? (
         <div className="startgame">
           {flaskResp && flaskResp.player ? (
-            <pre>
-              <div
-                className="pokemon"
-                dangerouslySetInnerHTML={{
-                  __html: DOMPurify.sanitize(flaskResp.pokeHTML),
-                }}
-              ></div>
-            </pre>
+            <>
+              <p className="hud">
+                PLAYER:{playerNickname} SCORE:
+                <span className="score-container">
+                  <span className="score">{flaskResp.score}</span>
+                </span>{" "}
+                <span className="tries"> TRIES:{flaskResp.tries}</span>
+              </p>
+              <p className="line">____________________________________</p>
+              <pre>
+                <div
+                  className="pokemon"
+                  dangerouslySetInnerHTML={{
+                    __html: DOMPurify.sanitize(flaskResp.pokeHTML),
+                  }}
+                ></div>
+              </pre>
+            </>
           ) : (
-            <p>No player URL available</p>
+            <p>There was an error setting up your account. Please reload.</p>
           )}
         </div>
       ) : (
         <Signin onSignIn={handleSignIn} />
       )}
+
       {/* ------------------buttons------------------ */}
+      <nav className="row guessform">
+        <div>
+          {resultScreen || signedIn == false ? (
+            <></>
+          ) : (
+            <form onSubmit={handleGuessSubmit}>
+              <button type="submit" className="col signin pixel-corners">
+                GUESS
+              </button>
+              <input
+                value={guessValue}
+                onChange={(e) => setGuessValue(e.target.value)}
+                name="guess"
+                type="text"
+                placeholder="Name"
+                className="col input"
+              />
+            </form>
+          )}
+        </div>
+      </nav>
       <nav className="row">
-        <div className="col d-flex justify-content-center">
+        <div className="col d-flex justify-content-end">
           <a
             href="#"
             onClick={() => {

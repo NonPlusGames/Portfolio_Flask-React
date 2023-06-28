@@ -85,6 +85,7 @@ button a {
 }
 
 .startgame {
+  position: relative;
   border: 5px ridge #3466af;
   border-radius: 10px;
   padding-left: 5px;
@@ -185,6 +186,64 @@ p span {
   margin: 0;
   padding: 0;
   border: none;
+}
+
+.guessform input {
+  border-radius: 10px;
+  padding: 3px;
+  margin-left: 5px;
+}
+
+.hud {
+  color: white;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 9999;
+  text-align: center;
+  line-height: 2em;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 0.6em;
+}
+
+.score-container {
+  white-space: nowrap;
+  overflow: hidden;
+  width: 15%;
+}
+
+.score {
+  display: inline-block;
+  position: relative;
+  animation: scroll 10s linear infinite;
+}
+
+.score::before {
+  content: "";
+  display: inline-block;
+  width: 2em; /* Adjust the width as needed */
+}
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+.line {
+  color: white;
+  position: absolute;
+  top: 0;
+  text-align: center;
+  width: 100%;
+  z-index: 9999;
+  padding-top: 5px;
+  line-height: 2em;
 }
 
 @media only screen and (min-width: 768px) {

@@ -15,6 +15,8 @@ function Landing(props: Props) {
           <img src={ascii} alt="ascii who's that pokemon picture" />
         </div>
       </article>
+
+      {/* ------------------buttons------------------ */}
       <nav className="row justify-content-lg-center">
         <div className="col col-lg-2 d-flex justify-content-center">
           <a

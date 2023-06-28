@@ -37,7 +37,7 @@ function Signin(props: Props) {
     <>
       <section className="startgame">
         <br />
-        <p>Please provide your username and password</p>
+        <p>Create an account or sign in using your username and password.</p>
         <div className="container">
           <form onSubmit={handleSubmit}>
             <input

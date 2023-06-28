@@ -14,6 +14,7 @@ class NewGame:
         self.hintNumber = 3
         self.score = 0
         self.tries = 3
+        self.guessDict = {}
         self.gameState = {
             "player": self.player.name,
             "score": self.score,
@@ -22,15 +23,20 @@ class NewGame:
             "difficulty": self.difficulty,
             "pokemon": self.pokemon.name,
             "pokeHTML": self.pokemon.pokeHTML,
+            "guess": self.guessDict,
         }
 
     def updateState(self):
-        self.player = self.gameState["player"]
-        self.score = self.gameState["score"]
-        self.tries = self.gameState["tries"]
-        self.hintNumber = self.gameState["hintNumber"]
-        self.difficulty = self.gameState["difficulty"]
-        self.pokemon = self.gameState["pokemon"]
+        self.gameState = {
+            "player": self.player.name,
+            "score": self.score,
+            "tries": self.tries,
+            "hintNumber": self.hintNumber,
+            "difficulty": self.difficulty,
+            "pokemon": self.pokemon.name,
+            "pokeHTML": self.pokemon.pokeHTML,
+            "guess": self.guessDict,
+        }
 
     # Prompt and set the difficulty for the player.  Checks that they make the correct input.
     def setDiff(self, level):
@@ -42,7 +48,8 @@ class NewGame:
         if guess.lower() == self.pokemon.name:
             self.score += 100
             self.tries = 3
-            return {"correct": True, "points": 100, "name": self.pokemon.name}
+            self.guessDict = {"correct": True, "points": 100, "name": self.pokemon.name}
+
         # Decrease the number of tries if the player guesses wrong
         # and decrease their current score by 25 points.
         # If the player uses up all of their tries, will update their account and provide ending prompts.
@@ -50,9 +57,13 @@ class NewGame:
             self.score -= 25
             if self.tries > 1:
                 self.tries -= 1
-                return {"correct": False, "points": -25, "name": self.pokemon.name}
+                self.guessDict = {
+                    "correct": False,
+                    "points": -25,
+                    "name": self.pokemon.name,
+                }
             else:
-                return {"correct": False, "points": -25, "name": "game-over"}
+                self.guessDict = {"correct": False, "points": -25, "name": "game-over"}
 
     def hint(self):
         # show a random hint, but decrease the number of available hints.

@@ -8,11 +8,6 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/hello", methods=["GET"])
-def hello():
-    return {"name": "Hello World!"}
-
-
 @app.route("/submit-data", methods=["GET", "POST"])
 def submit_data():
     data = request.get_json()
@@ -31,9 +26,11 @@ def sign_in():
 @app.route("/new-pokemon", methods=["GET", "POST"])
 def new_pokemon():
     global pokemon
+    global newGame
     pokemon = Pokemon()
     newGame.pokemon = pokemon
-    return jsonify(pokemon.name)
+    newGame.updateState()
+    return jsonify(newGame.gameState)
 
 
 @app.route("/new-game", methods=["GET", "POST"])
@@ -47,9 +44,11 @@ def new_game():
 
 @app.route("/guess", methods=["GET", "POST"])
 def guess():
+    global newGame
     data = request.get_json()
-    print(data)
-    newGame.guess(data["guess"])
+    guess = data["guess"]
+    newGame.guess(guess)
+    newGame.updateState()
     return jsonify(newGame.gameState)
 
 

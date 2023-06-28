@@ -11,7 +11,6 @@ function App() {
 
   const handleStartGame = (item: boolean) => {
     setGame(item);
-    console.log(item);
   };
 
   return (
