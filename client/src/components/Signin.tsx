@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import { CSSProperties } from "react";
+import { useState } from "react";
 
 interface Props {
   onSignIn: (item: boolean) => void;

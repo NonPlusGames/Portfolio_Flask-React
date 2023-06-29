@@ -1,14 +1,16 @@
 from flask import Flask, jsonify, request
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
+from flask.helpers import send_from_directory
 from asciimon import NewGame
 from player import Player
 from pokemon import Pokemon
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder="../../client/dist", static_url_path="")
 CORS(app)
 
 
 @app.route("/sign-in", methods=["GET", "POST"])
+@cross_origin()
 def sign_in():
     data = request.get_json()
     global player
@@ -17,6 +19,7 @@ def sign_in():
 
 
 @app.route("/new-pokemon", methods=["GET", "POST"])
+@cross_origin()
 def new_pokemon():
     global pokemon
     global newGame
@@ -42,6 +45,7 @@ def new_pokemon():
 
 
 @app.route("/new-game", methods=["GET", "POST"])
+@cross_origin()
 def new_game():
     global newGame
     global pokemon
@@ -53,6 +57,7 @@ def new_game():
 
 
 @app.route("/guess", methods=["GET", "POST"])
+@cross_origin()
 def guess():
     global newGame
     data = request.get_json()
@@ -63,11 +68,18 @@ def guess():
 
 
 @app.route("/hint", methods=["GET", "POST"])
+@cross_origin()
 def hint():
     global newGame
     newGame.hint()
     newGame.updateState()
     return jsonify(newGame.gameState)
+
+
+@app.route("/")
+@cross_origin()
+def serve():
+    return send_from_directory(app.static_folder, "index.html")
 
 
 if __name__ == "__main__":

@@ -1,6 +1,4 @@
 //An Info component all about "Who's That Asciimon!?!!" and how to play the game
-import React from "react";
-import { CSSProperties } from "react";
 interface Props {
   onStartGame: (item: string) => void;
 }

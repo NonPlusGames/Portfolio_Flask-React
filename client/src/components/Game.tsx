@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { CSSProperties } from "react";
 import Signin from "../components/Signin";
 import DOMPurify from "dompurify";
 

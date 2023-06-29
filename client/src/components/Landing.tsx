@@ -1,5 +1,3 @@
-import { useState } from "react";
-import { CSSProperties } from "react";
 import ascii from "../assets/ascii.jpg";
 
 interface Props {
