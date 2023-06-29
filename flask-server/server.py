@@ -8,13 +8,6 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/submit-data", methods=["GET", "POST"])
-def submit_data():
-    data = request.get_json()
-    print(data)
-    return jsonify(data)
-
-
 @app.route("/sign-in", methods=["GET", "POST"])
 def sign_in():
     data = request.get_json()
@@ -28,9 +21,24 @@ def new_pokemon():
     global pokemon
     global newGame
     pokemon = Pokemon()
-    newGame.pokemon = pokemon
-    newGame.updateState()
-    return jsonify(newGame.gameState)
+    if len(newGame.oldPokemon) <= 150:
+        if pokemon in newGame.oldPokemon:
+            new_pokemon()
+        else:
+            newGame.pokemon = pokemon
+            newGame.oldPokemon.append(pokemon)
+            newGame.updateState()
+            player.updateAccount(newGame.score)
+            newGame.highScore()
+            newGame.updateState()
+            return jsonify(newGame.gameState)
+    else:
+        newGame.win = True
+        newGame.updateState()
+        player.updateAccount(newGame.score)
+        newGame.highScore()
+        newGame.updateState()
+        return jsonify(newGame.gameState)
 
 
 @app.route("/new-game", methods=["GET", "POST"])
@@ -39,6 +47,8 @@ def new_game():
     global pokemon
     pokemon = Pokemon()
     newGame = NewGame(player, pokemon)
+    newGame.highScore()
+    newGame.updateState()
     return jsonify(newGame.gameState)
 
 

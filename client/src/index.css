@@ -57,7 +57,16 @@ button {
 .signin {
   padding: 5px;
   font-size: 1em;
+  border-radius: 10px;
 }
+
+.guess {
+  padding: 5px;
+  font-size: 1em;
+  border-radius: 10px;
+  margin-left: 5px;
+}
+
 .infobutton:focus {
   filter: brightness(100%);
 }
@@ -92,7 +101,12 @@ button a {
   padding-right: 5px;
   background-color: #000000;
   max-height: 48vh;
-  overflow-y: hidden;
+  overflow-y: scroll;
+}
+
+.highscores {
+  max-height: 20vh;
+  overflow-y: scroll;
 }
 
 .information {
@@ -194,6 +208,10 @@ p span {
   margin-left: 5px;
 }
 
+.signinform input {
+  margin-bottom: 2px;
+}
+
 .hud {
   color: white;
   position: absolute;
@@ -223,7 +241,7 @@ p span {
 .score::before {
   content: "";
   display: inline-block;
-  width: 2em; /* Adjust the width as needed */
+  width: 2em;
 }
 
 @keyframes scroll {

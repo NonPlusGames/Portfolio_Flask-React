@@ -15,6 +15,9 @@ class NewGame:
         self.score = 0
         self.tries = 3
         self.guessDict = {}
+        self.oldPokemon = []
+        self.win = False
+        self.highScoreString = ""
         self.gameState = {
             "player": self.player.name,
             "score": self.score,
@@ -24,6 +27,8 @@ class NewGame:
             "pokemon": self.pokemon.name,
             "pokeHTML": self.pokemon.pokeHTML,
             "guess": self.guessDict,
+            "win": self.win,
+            "highScoreString": self.highScoreString,
         }
 
     def updateState(self):
@@ -36,6 +41,8 @@ class NewGame:
             "pokemon": self.pokemon.name,
             "pokeHTML": self.pokemon.pokeHTML,
             "guess": self.guessDict,
+            "win": self.win,
+            "highScoreString": self.highScoreString,
         }
 
     # Prompt and set the difficulty for the player.  Checks that they make the correct input.
@@ -64,6 +71,7 @@ class NewGame:
                 }
             else:
                 self.guessDict = {"correct": False, "points": -25, "name": "game-over"}
+        self.player.updateAccount(self.score)
 
     def hint(self):
         # show a random hint, but decrease the number of available hints.
@@ -73,6 +81,37 @@ class NewGame:
             return self.pokemon.hints.pop(randomNum)
         else:
             return {"hint": 0}
+
+    # Display a running list of High Scores saved in the [playerData.json] file
+    def highScore(self):
+        with open("playerData.json", "r") as file:
+            playerList = json.load(file)
+        displayString = ""
+        playerList.sort(
+            reverse=True, key=lambda x: x["score"]
+        )  # sort the values in reverse order
+        # stylize and print the scores to the terminal
+        displayString += "----HIGH SCORES----<br/>"
+        displayString += "|  NAME : SCORE   |<br/>"
+        for player in playerList:  # print the name and score of each player
+            # make sure that the name is max 6 letters and fills in the leftover space
+            scoreName = ""
+            count = 0
+            for letter in player["name"]:
+                count += 1
+                if count <= 6:
+                    scoreName += letter
+            scoreName += " " * (6 - count)
+            # make sure that the score fills in the leftover space
+            #!*[COMEBACK AND FIX FOR VERY HIGH SCORES]*!
+            scoreScore = str(player["score"])
+            count = 0
+            for number in scoreScore:
+                count += 1
+            scoreScore += " " * (6 - count)
+            displayString += "|" + scoreName + " :   " + scoreScore + "|<br/>"
+        displayString += "-" * 19
+        self.highScoreString = displayString
 
     # def restartGame(self):
     #     print(f"Score:{self.score}")
@@ -93,35 +132,3 @@ class NewGame:
     #         elif prompt == "exit":  # END GAME
     #             print("bye!")
     #             sys.exit()
-
-
-# # Display a running list of High Scores saved in the [playerData.json] file
-# def scoreValue(e):
-#     return e["score"]  # used to sort the list of player scores
-
-
-# def highScore():
-#     with open("playerData.json", "r") as file:
-#         playerList = json.load(file)
-#     playerList.sort(reverse=True, key=scoreValue)  # sort the values in reverse order
-#     # stylize and print the scores to the terminal
-#     print("----HIGH SCORES----")
-#     print("|  NAME : SCORE   |")
-#     for player in playerList:  # print the name and score of each player
-#         # make sure that the name is max 6 letters and fills in the leftover space
-#         scoreName = ""
-#         count = 0
-#         for letter in player["name"]:
-#             count += 1
-#             if count <= 6:
-#                 scoreName += letter
-#         scoreName += " " * (6 - count)
-#         # make sure that the score fills in the leftover space
-#         #!*[COMEBACK AND FIX FOR VERY HIGH SCORES]*!
-#         scoreScore = str(player["score"])
-#         count = 0
-#         for number in scoreScore:
-#             count += 1
-#         scoreScore += " " * (6 - count)
-#         print("|" + scoreName + " :   " + scoreScore + "|")
-#     print("-" * 19)

@@ -1,4 +1,5 @@
 import json
+import os
 
 
 class Player:
@@ -13,12 +14,20 @@ class Player:
         }
 
     def handleAccount(self):
-        with open("playerData.json", "r") as file:
-            playerList = json.load(file)
-
         name = self.name
         password = self.__password
         player = {"name": name, "password": password, "score": 0}
+
+        filename = "playerData.json"
+
+        if not os.path.isfile(filename):
+            # File doesn't exist, create a new one
+            with open(filename, "w") as file:
+                json.dump([player], file)
+
+        # Read the contents of the file
+        with open(filename, "r") as file:
+            playerList = json.load(file)
 
         for i in range(len(playerList)):
             if name == playerList[i]["name"]:
