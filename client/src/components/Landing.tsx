@@ -3,11 +3,12 @@ import { CSSProperties } from "react";
 import ascii from "../assets/ascii.jpg";
 
 interface Props {
-  onStartGame: (item: boolean) => void;
+  onStartGame: (item: string) => void;
 }
 
 function Landing(props: Props) {
   const { onStartGame } = props;
+
   return (
     <>
       <article className="row d-flex justify-content-center">
@@ -22,16 +23,21 @@ function Landing(props: Props) {
           <a
             href="#"
             onClick={() => {
-              onStartGame(true);
+              onStartGame("game");
             }}
           >
             <button className="start pixel-corners">START</button>
           </a>
         </div>
         <div className="col col-lg-2 d-flex justify-content-center">
-          <button className="info pixel-corners dflex">
-            <a href="info.html">INFO</a>
-          </button>
+          <a
+            href="#"
+            onClick={() => {
+              onStartGame("info");
+            }}
+          >
+            <button className="start pixel-corners">INFO</button>
+          </a>
         </div>
       </nav>
     </>

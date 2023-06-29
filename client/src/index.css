@@ -109,22 +109,6 @@ button a {
   overflow-y: scroll;
 }
 
-.information {
-  border: 5px ridge #3466af;
-  border-radius: 10px;
-  padding-left: 5px;
-  padding-right: 5px;
-  background-color: rgba(255, 255, 255, 0.7);
-  max-height: 48vh;
-  overflow-y: scroll;
-}
-
-.information button p {
-  text-align: center;
-  margin-top: -10px;
-  margin-bottom: -10px;
-}
-
 p {
   font-size: 0.7rem;
   white-space: pre-wrap;
@@ -264,6 +248,42 @@ p span {
   line-height: 2em;
 }
 
+.hint {
+  position: relative;
+  margin-bottom: -50px;
+  top: 0;
+  text-align: center;
+  width: 100%;
+  z-index: 9999;
+  padding-top: 30px;
+  line-height: 2em;
+  font-size: 0.6em;
+  white-space: nowrap;
+}
+
+.hint .infobutton {
+  padding: 3px;
+  border-radius: 10px;
+  margin-right: 10px;
+  box-shadow: 1px 1px #3466af;
+}
+
+.information {
+  border: 5px ridge #3466af;
+  border-radius: 10px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: rgba(255, 255, 255, 0.7);
+  max-height: 48vh;
+  overflow-y: scroll;
+}
+
+.information button p {
+  text-align: center;
+  margin-top: -10px;
+  margin-bottom: -10px;
+}
+
 @media only screen and (min-width: 768px) {
   /* For desktop: */
   button {
@@ -293,7 +313,7 @@ p span {
   }
 
   .startgame {
-    width: 60vw;
+    width: 40vw;
     max-height: 47vh;
   }
 
@@ -303,6 +323,17 @@ p span {
 
   .colors {
     width: 35%;
+  }
+  .hint {
+    font-size: 1em;
+    padding-top: 40px;
+  }
+
+  .hint .infobutton {
+    padding: 3px;
+    font-size: 0.8em;
+    border-radius: 10px;
+    margin-right: 10px;
   }
 }
 

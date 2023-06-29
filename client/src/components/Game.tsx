@@ -4,7 +4,7 @@ import Signin from "../components/Signin";
 import DOMPurify from "dompurify";
 
 interface Props {
-  onStartGame: (item: boolean) => void;
+  onStartGame: (item: string) => void;
 }
 
 function Game(props: Props) {
@@ -16,6 +16,7 @@ function Game(props: Props) {
   const [resultScreen, setResultScreen] = useState<boolean>(false);
   const [playerNickname, setPlayerNickname] = useState<string>("");
   const [gameOver, setGameOver] = useState<boolean>(false);
+  const [hint, setHint] = useState<boolean>(false);
 
   useEffect(() => {
     //after signing in, start the new game using the new-game endpoint
@@ -84,150 +85,186 @@ function Game(props: Props) {
     }
   };
 
+  const handleHint = () => {
+    if (hint == false) {
+      setHint(true);
+      if (flaskResp) {
+        fetch("http://127.0.0.1:5000/hint")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log("New Poke data received from Flask:", data);
+            setFlaskResp(data);
+          })
+          .catch((error) => {
+            console.error("Error:", error);
+          });
+      }
+    } else if (hint == true) setHint(false);
+  };
+
   return (
     <>
-      {flaskResp && flaskResp.win ? (
-        <div className="startgame">
-          <p>
-            You got {guessFlaskResp.name} Correct! +{guessFlaskResp.points}pts
-          </p>
-          <p>
-            CONGRATULATIONS! YOU ARE A POKEMON GUESSING MASTER! YOU GUESSED ALL
-            151
-          </p>
-          <div className="highscores">
-            <p
-              className="highscores-inner"
-              dangerouslySetInnerHTML={{
-                __html: DOMPurify.sanitize(flaskResp.highScoreString),
-              }}
-            ></p>
-          </div>
-          <nav className="row">
-            <a
-              href="#"
-              onClick={() => {
-                onStartGame(false);
-              }}
-            >
-              <button className="signin pixel-corners">START OVER</button>
-            </a>
-          </nav>
-        </div>
-      ) : resultScreen ? (
-        guessFlaskResp && guessFlaskResp.correct == true ? (
+      <article className="row d-flex justify-content-center">
+        {" "}
+        {flaskResp && flaskResp.win ? (
           <div className="startgame">
             <p>
-              You got {guessFlaskResp.name} Correct! +{guessFlaskResp.points}
-              pts
+              You got {guessFlaskResp.name} Correct! +{guessFlaskResp.points}pts
             </p>
+            <p>
+              CONGRATULATIONS! YOU ARE A POKEMON GUESSING MASTER! YOU GUESSED
+              ALL 151
+            </p>
+            <div className="highscores">
+              <p
+                className="highscores-inner"
+                dangerouslySetInnerHTML={{
+                  __html: DOMPurify.sanitize(flaskResp.highScoreString),
+                }}
+              ></p>
+            </div>
             <nav className="row">
-              <a href="#" onClick={handleNewGuess}>
-                <button className="signin pixel-corners">New Pokemon</button>
+              <a
+                href="#"
+                onClick={() => {
+                  onStartGame("landing");
+                }}
+              >
+                <button className="signin pixel-corners">START OVER</button>
               </a>
             </nav>
           </div>
-        ) : (
+        ) : resultScreen ? (
+          guessFlaskResp && guessFlaskResp.correct == true ? (
+            <div className="startgame">
+              <p>
+                You got {guessFlaskResp.name} Correct! +{guessFlaskResp.points}
+                pts
+              </p>
+              <nav className="row">
+                <a href="#" onClick={handleNewGuess}>
+                  <button className="signin pixel-corners">New Pokemon</button>
+                </a>
+              </nav>
+            </div>
+          ) : (
+            <div className="startgame">
+              {gameOver ? (
+                <>
+                  <p>
+                    You got {flaskResp.pokemon} Incorrect!{" "}
+                    {guessFlaskResp.points}
+                    pts Sorry! You have no more tries left. Game Over!
+                  </p>
+                  <div className="highscores">
+                    <p
+                      className="highscores-inner"
+                      dangerouslySetInnerHTML={{
+                        __html: DOMPurify.sanitize(flaskResp.highScoreString),
+                      }}
+                    ></p>
+                  </div>
+                  <nav className="row">
+                    <a
+                      href="#"
+                      onClick={() => {
+                        onStartGame("landing");
+                      }}
+                    >
+                      <button className="signin pixel-corners">
+                        START OVER
+                      </button>
+                    </a>
+                  </nav>
+                </>
+              ) : (
+                <>
+                  <p>
+                    Your guess was Incorrect! {guessFlaskResp.points}
+                    pts
+                  </p>
+                  <nav className="row">
+                    <a href="#" onClick={handleNewGuess}>
+                      <button className="signin pixel-corners">
+                        Try Again
+                      </button>
+                    </a>
+                  </nav>
+                </>
+              )}
+            </div>
+          )
+        ) : signedIn ? (
           <div className="startgame">
-            {gameOver ? (
+            {flaskResp && flaskResp.player ? (
               <>
-                <p>
-                  You got {flaskResp.pokemon} Incorrect! {guessFlaskResp.points}
-                  pts Sorry! You have no more tries left. Game Over!
+                <p className="hud d-flex align-items-center justify-content-center">
+                  <span>PLAYER:{playerNickname}</span> SCORE:
+                  <span className="score-container">
+                    <span className="score">{flaskResp.score}</span>
+                  </span>{" "}
+                  <span className="tries"> TRIES:{flaskResp.tries}</span>
                 </p>
-                <div className="highscores">
-                  <p
-                    className="highscores-inner"
+                <p className="line">_____________________________</p>
+                <p className="hint row">
+                  <div className="d-flex align-items-center justify-content-start">
+                    <button
+                      onClick={handleHint}
+                      className="infobutton pixel-corners"
+                    >
+                      HINT ({flaskResp.hintNumber})
+                    </button>
+                    {hint ? <span>{flaskResp.hintValue}</span> : <></>}
+                  </div>
+                </p>
+                <pre>
+                  <div
+                    className="pokemon"
                     dangerouslySetInnerHTML={{
-                      __html: DOMPurify.sanitize(flaskResp.highScoreString),
+                      __html: DOMPurify.sanitize(flaskResp.pokeHTML),
                     }}
-                  ></p>
-                </div>
-                <nav className="row">
-                  <a
-                    href="#"
-                    onClick={() => {
-                      onStartGame(false);
-                    }}
-                  >
-                    <button className="signin pixel-corners">START OVER</button>
-                  </a>
-                </nav>
+                  ></div>
+                </pre>
               </>
             ) : (
-              <>
-                <p>
-                  Your guess was Incorrect! {guessFlaskResp.points}
-                  pts
-                </p>
-                <nav className="row">
-                  <a href="#" onClick={handleNewGuess}>
-                    <button className="signin pixel-corners">Try Again</button>
-                  </a>
-                </nav>
-              </>
+              <p>There was an error setting up your account. Please reload.</p>
             )}
           </div>
-        )
-      ) : signedIn ? (
-        <div className="startgame">
-          {flaskResp && flaskResp.player ? (
-            <>
-              <p className="hud">
-                PLAYER:{playerNickname} SCORE:
-                <span className="score-container">
-                  <span className="score">{flaskResp.score}</span>
-                </span>{" "}
-                <span className="tries"> TRIES:{flaskResp.tries}</span>
-              </p>
-              <p className="line">____________________________________</p>
-              <pre>
-                <div
-                  className="pokemon"
-                  dangerouslySetInnerHTML={{
-                    __html: DOMPurify.sanitize(flaskResp.pokeHTML),
-                  }}
-                ></div>
-              </pre>
-            </>
-          ) : (
-            <p>There was an error setting up your account. Please reload.</p>
-          )}
-        </div>
-      ) : (
-        <Signin onSignIn={handleSignIn} />
-      )}
+        ) : (
+          <Signin onSignIn={handleSignIn} />
+        )}
+      </article>
 
       {/* ------------------buttons------------------ */}
-      <nav className="row guessform">
-        <div>
-          {resultScreen || signedIn == false ? (
-            <></>
-          ) : (
-            <form onSubmit={handleGuessSubmit} className="row">
-              <div className="d-flex align-items-center justify-content-between">
-                <input
-                  value={guessValue}
-                  onChange={(e) => setGuessValue(e.target.value)}
-                  name="guess"
-                  type="text"
-                  placeholder="TYPE YOUR GUESS HERE"
-                  className="input"
-                />
-                <button type="submit" className="guess pixel-corners">
-                  GUESS
-                </button>
-              </div>
-            </form>
-          )}
-        </div>
-      </nav>
+
+      <div className="row guessform">
+        {resultScreen || signedIn == false ? (
+          <></>
+        ) : (
+          <form onSubmit={handleGuessSubmit} className="row">
+            <div className="d-flex align-items-center justify-content-center">
+              <input
+                value={guessValue}
+                onChange={(e) => setGuessValue(e.target.value)}
+                name="guess"
+                type="text"
+                placeholder="TYPE YOUR GUESS HERE"
+                className="input"
+              />
+              <button type="submit" className="guess pixel-corners">
+                GUESS
+              </button>
+            </div>
+          </form>
+        )}
+      </div>
+
       <nav className="row">
         <div className="col d-flex justify-content-end">
           <a
             href="#"
             onClick={() => {
-              onStartGame(false);
+              onStartGame("landing");
             }}
           >
             <button className="start pixel-corners">RETURN</button>

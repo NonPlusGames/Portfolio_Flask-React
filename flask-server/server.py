@@ -62,5 +62,13 @@ def guess():
     return jsonify(newGame.gameState)
 
 
+@app.route("/hint", methods=["GET", "POST"])
+def hint():
+    global newGame
+    newGame.hint()
+    newGame.updateState()
+    return jsonify(newGame.gameState)
+
+
 if __name__ == "__main__":
     app.run(debug=True)

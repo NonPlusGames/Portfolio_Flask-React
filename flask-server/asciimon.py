@@ -18,6 +18,7 @@ class NewGame:
         self.oldPokemon = []
         self.win = False
         self.highScoreString = ""
+        self.hintValue = ""
         self.gameState = {
             "player": self.player.name,
             "score": self.score,
@@ -29,6 +30,7 @@ class NewGame:
             "guess": self.guessDict,
             "win": self.win,
             "highScoreString": self.highScoreString,
+            "hintValue": self.hintValue,
         }
 
     def updateState(self):
@@ -43,6 +45,7 @@ class NewGame:
             "guess": self.guessDict,
             "win": self.win,
             "highScoreString": self.highScoreString,
+            "hintValue": self.hintValue,
         }
 
     # Prompt and set the difficulty for the player.  Checks that they make the correct input.
@@ -78,9 +81,9 @@ class NewGame:
         if len(self.pokemon.hints) > 0 and self.hintNumber > 0:
             randomNum = random.randint(0, len(self.pokemon.hints) - 1)
             self.hintNumber = self.hintNumber - 1
-            return self.pokemon.hints.pop(randomNum)
+            self.hintValue = self.pokemon.hints.pop(randomNum)
         else:
-            return {"hint": 0}
+            self.hintValue = "No more hints available."
 
     # Display a running list of High Scores saved in the [playerData.json] file
     def highScore(self):

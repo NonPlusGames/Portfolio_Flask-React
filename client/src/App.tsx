@@ -5,12 +5,19 @@ import pika from "./assets/pika.png";
 import poke from "./assets/poke.png";
 import Landing from "./components/Landing.tsx";
 import Game from "./components/Game.tsx";
+import Info from "./components/Info.tsx";
 
 function App() {
-  const [gameStart, setGame] = useState<boolean>(false);
+  const [gameStart, setGame] = useState<any>(null);
 
-  const handleStartGame = (item: boolean) => {
-    setGame(item);
+  const handleStartGame = (item: string) => {
+    if (item === "landing") {
+      setGame(<Landing onStartGame={handleStartGame} />);
+    } else if (item === "game") {
+      setGame(<Game onStartGame={handleStartGame} />);
+    } else if (item === "info") {
+      setGame(<Info onStartGame={handleStartGame} />);
+    }
   };
 
   return (
@@ -24,7 +31,7 @@ function App() {
         </header>
         {/* Conditionally Load Components based on passed props */}
         {gameStart ? (
-          <Game onStartGame={handleStartGame} />
+          <>{gameStart}</>
         ) : (
           <Landing onStartGame={handleStartGame} />
         )}
