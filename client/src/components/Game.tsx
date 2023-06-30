@@ -20,7 +20,7 @@ function Game(props: Props) {
   useEffect(() => {
     //after signing in, start the new game using the new-game endpoint
     if (signedIn) {
-      fetch("http://127.0.0.1:5000/new-game")
+      fetch("/new-game")
         .then((response) => response.json())
         .then((data) => {
           console.log("Sign in data received from Flask:", data);
@@ -40,7 +40,7 @@ function Game(props: Props) {
   const handleGuessSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    fetch("http://127.0.0.1:5000/guess", {
+    fetch("/guess", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +66,7 @@ function Game(props: Props) {
 
   const handleNewGuess = () => {
     if (guessFlaskResp && guessFlaskResp.correct == true) {
-      fetch("http://127.0.0.1:5000/new-pokemon")
+      fetch("/new-pokemon")
         .then((response) => response.json())
         .then((data) => {
           console.log("New Poke data received from Flask:", data);
@@ -88,7 +88,7 @@ function Game(props: Props) {
     if (hint == false) {
       setHint(true);
       if (flaskResp) {
-        fetch("http://127.0.0.1:5000/hint")
+        fetch("/hint")
           .then((response) => response.json())
           .then((data) => {
             console.log("New Poke data received from Flask:", data);

@@ -5,13 +5,20 @@ from asciimon import NewGame
 from player import Player
 from pokemon import Pokemon
 
-app = Flask(__name__, static_folder="../../client/dist", static_url_path="")
+app = Flask(__name__, static_folder="../dist", static_url_path="/")
 CORS(app)
+
+
+@app.route("/testroute")
+@cross_origin()
+def testroute():
+    return "This is a test route"
 
 
 @app.route("/sign-in", methods=["GET", "POST"])
 @cross_origin()
 def sign_in():
+    print("sign in")
     data = request.get_json()
     global player
     player = Player(data["name"], data["password"])
@@ -83,4 +90,4 @@ def serve():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()

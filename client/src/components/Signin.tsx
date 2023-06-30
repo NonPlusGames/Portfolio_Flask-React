@@ -13,7 +13,7 @@ function Signin(props: Props) {
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    fetch("http://127.0.0.1:5000/sign-in", {
+    fetch("/sign-in", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
