@@ -13,7 +13,7 @@ RUN yarn build
 # Stage 2: Build Flask Backend
 FROM python:3.9
 WORKDIR /app
-COPY --from=build-step /app/build ./dist
+COPY --from=build-step /app/dist ./dist
 
 RUN mkdir ./api
 COPY ./flask-server ./api
@@ -26,7 +26,7 @@ ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
 # Expose the Flask app port
-EXPOSE 5000
+EXPOSE 3000
 WORKDIR /app/api
 # Start the Flask server using Waitress
-CMD ["waitress-serve", "--port=5000", "app:app"]
+CMD ["waitress-serve", "--port=3000", "app:app"]
